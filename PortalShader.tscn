@@ -1,0 +1,152 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://PortalShader.gd" type="Script" id=1]
+[ext_resource path="res://beach-beverage-drink-68672.jpg" type="Texture" id=2]
+[ext_resource path="res://icon.png" type="Texture" id=3]
+
+[sub_resource type="Shader" id=3]
+
+code = "shader_type canvas_item;
+
+uniform vec2 ThisPortalCenter;
+uniform vec2 OtherPortalCenter;
+
+void fragment() {
+	
+	vec2 thing1 = ThisPortalCenter * SCREEN_PIXEL_SIZE;
+	vec2 thing2 = OtherPortalCenter * SCREEN_PIXEL_SIZE;
+	vec2 ConvertedThisPortalCenter = vec2(thing1.x, 1.0 - thing1.y); //Converts the passed Godot xy into UV
+	vec2 ConvertedOtherPortalCenter = vec2(thing2.x, 1.0 - thing2.y); //Converts the passed Godot xy into UV
+	vec2 relativeVector = SCREEN_UV - ConvertedThisPortalCenter;
+	vec2 OtherPortalUV = relativeVector + ConvertedOtherPortalCenter;
+    vec3 c = textureLod(SCREEN_TEXTURE, OtherPortalUV, 0.0).rgb;
+
+    COLOR.rgb = c;
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+
+render_priority = 0
+shader = SubResource( 3 )
+shader_param/ThisPortalCenter = Vector2( 0, 0 )
+shader_param/OtherPortalCenter = Vector2( 0, 0 )
+_sections_unfolded = [ "shader_param" ]
+
+[sub_resource type="Shader" id=1]
+
+code = "shader_type canvas_item;
+
+uniform vec2 ThisPortalCenter;
+uniform vec2 OtherPortalCenter;
+
+void fragment() {
+		vec2 thing1 = ThisPortalCenter * SCREEN_PIXEL_SIZE;
+		vec2 thing2 = OtherPortalCenter * SCREEN_PIXEL_SIZE;
+		vec2 ConvertedThisPortalCenter = vec2(thing1.x, 1.0 - thing1.y); //Converts the passed Godot xy into UV
+		vec2 ConvertedOtherPortalCenter = vec2(thing2.x, 1.0 - thing2.y); //Converts the passed Godot xy into UV
+		vec2 relativeVector = SCREEN_UV - ConvertedThisPortalCenter;
+		vec2 OtherPortalUV = relativeVector + ConvertedOtherPortalCenter;
+        vec3 c = textureLod(SCREEN_TEXTURE, OtherPortalUV, 0.0).rgb;
+
+        COLOR.rgb = c;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+
+render_priority = 0
+shader = SubResource( 1 )
+shader_param/ThisPortalCenter = Vector2( 0, 0 )
+shader_param/OtherPortalCenter = Vector2( 0, 0 )
+_sections_unfolded = [ "shader_param" ]
+
+[sub_resource type="Shader" id=5]
+
+code = "shader_type canvas_item;
+
+uniform vec2 ThisPortalCenter;
+uniform vec2 OtherPortalCenter;
+uniform vec4 PortalColor : hint_color;
+
+void fragment() {
+	if (UV.x < 0.1 || UV.x > 0.9 || UV.y < 0.1 || UV.y > 0.9)
+	{
+		COLOR = PortalColor;
+	}
+	else
+	{		
+		vec2 thing1 = ThisPortalCenter * SCREEN_PIXEL_SIZE;
+		vec2 thing2 = OtherPortalCenter * SCREEN_PIXEL_SIZE;
+		vec2 ConvertedThisPortalCenter = vec2(thing1.x, 1.0 - thing1.y); //Converts the passed Godot xy into UV
+		vec2 ConvertedOtherPortalCenter = vec2(thing2.x, 1.0 - thing2.y); //Converts the passed Godot xy into UV
+		vec2 relativeVector = SCREEN_UV - ConvertedThisPortalCenter;
+		vec2 OtherPortalUV = relativeVector + ConvertedOtherPortalCenter;
+	    vec3 c = textureLod(SCREEN_TEXTURE, OtherPortalUV, 0.0).rgb;
+	
+	    COLOR.rgb = c;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+
+render_priority = 0
+shader = SubResource( 5 )
+shader_param/ThisPortalCenter = null
+shader_param/OtherPortalCenter = null
+shader_param/PortalColor = Color( 0.933594, 0.464746, 0.0510559, 1 )
+_sections_unfolded = [ "shader_param" ]
+
+[node name="Root" type="Node2D" index="0"]
+
+script = ExtResource( 1 )
+
+[node name="beach-beverage-drink-68672" type="Sprite" parent="." index="0"]
+
+position = Vector2( 501.934, 307.76 )
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 2 )
+_sections_unfolded = [ "Transform", "Z Index" ]
+
+[node name="PortalA" type="Polygon2D" parent="." index="1"]
+
+material = SubResource( 4 )
+position = Vector2( 605.125, 302.628 )
+polygon = PoolVector2Array( -50, -50, 50, -50, 50, 50, -50, 50 )
+uv = PoolVector2Array( -50, -50, -50, 50, 50, 50, 50, -50 )
+color = Color( 0.914063, 0.654444, 0.103546, 1 )
+vertex_colors = PoolColorArray(  )
+offset = Vector2( 0, 0 )
+antialiased = false
+texture = null
+texture_offset = Vector2( 0, 0 )
+texture_scale = Vector2( 1, 1 )
+texture_rotation_degrees = 0.0
+invert_enable = false
+invert_border = 100.0
+_sections_unfolded = [ "Material", "Texture", "Transform" ]
+
+[node name="PortalB" type="Polygon2D" parent="." index="2"]
+
+material = SubResource( 2 )
+position = Vector2( 668.668, 420.612 )
+polygon = PoolVector2Array( -50, -50, 50, -50, 50, 50, -50, 50 )
+uv = PoolVector2Array(  )
+color = Color( 0.0529785, 0.102646, 0.847656, 1 )
+vertex_colors = PoolColorArray(  )
+offset = Vector2( 0, 0 )
+antialiased = false
+texture = null
+texture_offset = Vector2( 0, 0 )
+texture_scale = Vector2( 1, 1 )
+texture_rotation_degrees = 0.0
+invert_enable = false
+invert_border = 100.0
+_sections_unfolded = [ "Material", "Transform" ]
+
+[node name="PortalC" type="Sprite" parent="." index="3"]
+
+material = SubResource( 6 )
+position = Vector2( 698.583, 217.31 )
+texture = ExtResource( 3 )
+_sections_unfolded = [ "Material" ]
+
+
